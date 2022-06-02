@@ -1,0 +1,50 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\Post;
+use Illuminate\Http\Request;
+
+
+class PostController extends Controller
+{
+    public function index(){
+        $posts = Post::all();
+//        return  $posts;
+
+        return view('index',compact('posts'));
+    }
+    public function create(){
+        return view('create');
+    }
+    public function store(Request $request){
+        $post = new Post();
+        $post->title = $request->title;
+        $post->description =$request->description;
+        $post->save();
+
+        return redirect()->route('post.index')->with('status','Your create is Success');
+    }
+    public function show($id){
+//            return $id;
+       $post = Post::find($id);
+        return view('show', compact('post'));
+    }
+    public function destroy($id){
+        $post = Post::find($id);
+        $post->delete();
+        return redirect()->route('post.index')->with('status','Your destroy is Success');
+    }
+    public function edit($id){
+        $post = Post::find($id);
+        return view('edit',compact('post'));
+    }
+    public function update(Request $request,$id){
+       $post = Post::find($id);
+        $post->title = $request->title;
+        $post->description =$request->description;
+        $post->update();
+
+        return redirect()->route('post.index')->with('status','Your update is Success');
+    }
+}
